@@ -1,0 +1,83 @@
+package com.ucsdextandroid2.screennavigation.instagram;
+
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TableLayout;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
+import com.ucsdextandroid2.screennavigation.R;
+
+public class NotificationPagerFragment extends Fragment {
+
+    private NotificationPagerAdapter adapter;
+    private TabLayoutMediator tabMediator;
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_view_pager, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        if(adapter == null){
+            adapter = new NotificationPagerAdapter(this);
+        }
+
+        TabLayout tabLayout = view.findViewById(R.id.fvp_tab_layout);
+        ViewPager2 viewPager2 = view.findViewById(R.id.fvp_view_pager);
+
+        viewPager2.setAdapter(adapter);
+        tabMediator = new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> tab.setText(adapter.getTitle(position)));
+
+        tabMediator.attach();
+
+    }
+
+    private class NotificationPagerAdapter extends FragmentStateAdapter{
+
+        public NotificationPagerAdapter(@NonNull Fragment fragment) {
+            super(fragment);
+        }
+
+        @NonNull
+        @Override
+        public Fragment createFragment(int position) {
+            switch (position){
+                case 0:
+                    return new NotificationsFragment();
+                case 1:
+                    return new NotificationsFragment();
+                default:
+                    throw new IllegalArgumentException("Unsupported index " + position );
+            }
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return 2;
+        }
+
+        public  String getTitle(int position) {
+            switch (position){
+                case 0:
+                    return "Following";
+                case 1:
+                    return "You";
+                default:
+                    throw new IllegalArgumentException("Unsupported index " + position );
+            }
+        }
+    }
+}
